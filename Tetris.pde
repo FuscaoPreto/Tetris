@@ -1,10 +1,4 @@
 import processing.sound.*;
-import controlP5.*;
-
-ControlP5 cp5;
-Slider volumeSlider;
-Button settingsButton;
-boolean settingsOpen = false;
 
 /* 
 * Thanks to Javidx9 for his tutorial on programming Tetris, it was of great help - https://www.youtube.com/watch?v=8OK8_tHeCIA
@@ -136,13 +130,13 @@ void setup()
     
     // Not using the textures from this spritesheet anymore
     // Instead we are giving colors to the tiles based on the current background color
-    //spritesheet = loadImage("spritesheet.png");
+    spritesheet = loadImage("spritesheet.png");
     vignette = loadImage("vignette.png"); // For darkening the edges of the screen
     
-    /*for(int i = 0; i < 7; i++)
+    for(int i = 0; i < 7; i++)
     {
         textures[i] = spritesheet.get(32 * i, 0, 32, 32);
-    }*/
+    }
     
     textureMode(REPEAT);
     sphereDetail(15);
@@ -160,14 +154,6 @@ void setup()
     
     createMap();
     getNewPiece();
-    cp5 = new ControlP5(this);
-    volumeSlider = cp5.addSlider("Volume")
-                       .setPosition(50, 50)
-                       .setRange(0, 100) // valores variam de 0 a 100
-                       .setValue(50); // o valor inicial é 50
-    settingsButton = cp5.addButton("Settings")
-                         .setPosition(50, 100)
-                         .setSize(80, 40);
 }
 
 void draw() 
@@ -188,14 +174,9 @@ void draw()
     
     drawInterface();
     
-    settingsButton.hide();
-
-    volumeSlider.hide();
-
-    if(initialPause) drawMainMenu();
+    if(initialPause) drawPauseScreen();
     
     if(gameOver) drawGameOverScreen();
-    
 }
 
 // Main gameplay logic loop - push the current piece down, check inputs and remove full rows if they exist
@@ -505,32 +486,3 @@ void resetGameState()
     score = 0;
 }
     
-void drawMainMenu() {
-    background(0);
-    fill(255);
-    textSize(30);
-    textAlign(CENTER, CENTER);
-    text("TETRIS", resX / 2, resY / 3);
-    textSize(20);
-    text("Press space to start", resX / 2, resY / 2);
-    settingsButton.show();
-
-    if (settingsOpen) {
-        drawSettingsMenu();
-    }
-}
-
-void drawSettingsMenu() {
-    // Desenhe o controle deslizante de volume
-    volumeSlider.show();
-}
-
-void Settings() {
-    settingsOpen = !settingsOpen;
-}
-
-void Volume(float volume) {
-    // Ajuste o volume do seu jogo aqui
-    // Por exemplo, se você estiver usando a biblioteca Minim para áudio:
-    bgm.amp(volume / 100); // O ganho varia de -100 (silencioso) a 0 (máximo)
-}

@@ -214,9 +214,6 @@ void keyPressed()
         }
         
     }
-    if(keyCode == TAB){
-        gameOver = true;
-    }
 
 }
 
