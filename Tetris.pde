@@ -26,8 +26,9 @@ boolean initialPause = true;
 
 // Dificuldades
 int facilDelay = 1000;
-int medioDelay = 700;
-int dificilDelay = 200;
+int medioDelay = 500;
+int dificilDelay = 250;
+int impossivelDelay = 100;
 boolean isDifficultySelected = false;
 int selectedDifficulty = -1; // -1 significa que nenhuma dificuldade foi selecionada
 
@@ -42,6 +43,7 @@ PShape scoreTextBgShape;
 PShape timerTextBgShape;
 PImage icon;
 PImage caveira;
+PImage x;
 PImage fogo;
 PImage vignette;
 PFont font;
@@ -141,6 +143,7 @@ void setup()
     
     fogo = loadImage("fire.png");
     caveira = loadImage("skull.png");
+    x = loadImage("x.png");
     vignette = loadImage("vignette.png"); // For darkening the edges of the screen
 
     
@@ -176,6 +179,9 @@ void draw()
         drawBubbles();
     }
     else if(selectedDifficulty == 1){
+        drawIcon(x);
+    }
+    else if(selectedDifficulty == 2){
         drawIcon(fogo);
     }
     else{
@@ -516,7 +522,7 @@ void drawDifficultyMenu() {
     
     // Desenha o seletor dinâmico
     int mouseOverDifficulty = getMouseOverDifficulty(mouseY);
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         if (mouseOverDifficulty == i || selectedDifficulty == i) {
             fill(selectedDifficulty == i ? color(0, 255, 0) : color(255, 0, 0)); // Verde se selecionado, vermelho se apenas sobre
             rect(width / 2 - 100, height / 2 + (i * 40) - 20, 200, 40);
@@ -524,14 +530,16 @@ void drawDifficultyMenu() {
         fill(255); // Cor do texto
         if (i == 0) text("Facil", width / 2, height / 2);
         else if (i == 1) text("Medio", width / 2, height / 2 + 40);
-        else text("Dificil", width / 2, height / 2 + 80);
+        else if (i == 2)text("Dificil", width / 2, height / 2 + 80);
+        else text("Impossivel", width / 2, height / 2 + 120);
     }
 }
 
 int getMouseOverDifficulty(int mouseY) {
     if (mouseY >= height / 2 && mouseY < height / 2 + 40) return 0;
     else if (mouseY >= height / 2 + 40 && mouseY < height / 2 + 80) return 1;
-    else if (mouseY >= height / 2 + 80) return 2;
+    else if (mouseY >= height / 2 + 80 && mouseY < height / 2 + 120) return 2;
+    else if (mouseY >= height / 2 + 120) return 3;
     return -1;
 }
 
@@ -540,6 +548,7 @@ void selectDifficulty(int mouseY) {
     if (difficulty == 0) pushDownDelay = facilDelay;
     else if (difficulty == 1) pushDownDelay = medioDelay;
     else if (difficulty == 2) pushDownDelay = dificilDelay;
+    else pushDownDelay = impossivelDelay;
     selectedDifficulty = difficulty; // Atualiza a dificuldade selecionada
     isDifficultySelected = true;
 }
