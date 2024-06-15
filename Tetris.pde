@@ -27,7 +27,7 @@ boolean initialPause = true;
 // Dificuldades
 int facilDelay = 1000;
 int medioDelay = 700;
-int dificilDelay = 400;
+int dificilDelay = 200;
 boolean isDifficultySelected = false;
 int selectedDifficulty = -1; // -1 significa que nenhuma dificuldade foi selecionada
 
@@ -546,4 +546,31 @@ void selectDifficulty(int mouseY) {
 
 void mousePressed() {
     selectDifficulty(mouseY);
+    if (mouseX >= width / 2 - 50 && mouseX <= width / 2 + 50 && mouseY >= height - 100 && mouseY <= height - 60) {
+        // Aqui você pode chamar a função que desenha o menu inicial
+        // Por exemplo: drawMainMenu();
+    }
+    
+}
+
+void drawCreditsMenu() {
+    background(0);
+    fill(255);
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    text("Créditos", width / 2, height / 4);
+    
+    // Lista de nomes e RAs
+    String[] nomes = {"Igor de Souza Bertelli", "Otávio Pereira Cardoso", "Carlos", "Felipe"};
+    String[] ras = {"RA 202121613", "RA 202318690", "RA 34567", "RA 45678"};
+    
+    for (int i = 0; i < nomes.length; i++) {
+        text(nomes[i] + " - " + ras[i], width / 2, height / 3 + i * 30);
+    }
+    
+    // Botão de voltar
+    fill(255, 0, 0); // Cor do botão
+    rect(width / 2 - 50, height - 100, 100, 40); // Desenha o botão
+    fill(255); // Cor do texto
+    text("Voltar", width / 2, height - 80); // Texto do botão
 }
