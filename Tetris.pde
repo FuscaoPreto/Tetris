@@ -141,13 +141,13 @@ void setup()
     
     // Not using the textures from this spritesheet anymore
     // Instead we are giving colors to the tiles based on the current background color
-    spritesheet = loadImage("spritesheet.png");
+    //spritesheet = loadImage("spritesheet.png");
     vignette = loadImage("vignette.png"); // For darkening the edges of the screen
     
-    for(int i = 0; i < 7; i++)
+    /*for(int i = 0; i < 7; i++)
     {
         textures[i] = spritesheet.get(32 * i, 0, 32, 32);
-    }
+    }*/
     
     textureMode(REPEAT);
     sphereDetail(15);
@@ -169,7 +169,7 @@ void setup()
 
 void draw() 
 {   
-     if (!isDifficultySelected) {
+    if (!isDifficultySelected) {
         drawDifficultyMenu();
     } else {
         
