@@ -24,6 +24,14 @@ float pushDownDelay = 1000; // Time between automatic pushdown of the falling pi
 boolean gameOver = false;
 boolean initialPause = true;
 
+// Dificuldades
+int facilDelay = 1000;
+int medioDelay = 700;
+int dificilDelay = 400;
+boolean isDifficultySelected = false;
+int selectedDifficulty = -1; // -1 significa que nenhuma dificuldade foi selecionada
+
+
 // PShape objects are used to render each different thing on screen
 PShape boxShape;
 PShape fillShape;
@@ -50,6 +58,7 @@ void settings()
 {
     size(resX, resY, P3D);
     PJOGL.setIcon("icon.png"); // Window icon for the game
+    
 }
 
 void setup()
@@ -94,6 +103,8 @@ void setup()
     frameRate(60);
     ((PGraphicsOpenGL)g).textureSampling(3);
 
+    // método para mostrar a tela de seleção de dificuldade
+    drawDifficultyMenu();
     // I'm using a bunch of shape objects because for some reason rect() doesn't work properly
     shapeMode(CORNER);
     boxShape = createShape(BOX, 32, 32, 1);
@@ -157,8 +168,12 @@ void setup()
 }
 
 void draw() 
-{        
-    update();
+{   
+     if (!isDifficultySelected) {
+        drawDifficultyMenu();
+    } else {
+        
+         update();
     
     drawBackground();
     
@@ -177,6 +192,8 @@ void draw()
     if(initialPause) drawPauseScreen();
     
     if(gameOver) drawGameOverScreen();
+    }  
+   
 }
 
 // Main gameplay logic loop - push the current piece down, check inputs and remove full rows if they exist
@@ -484,5 +501,47 @@ void resetGameState()
     secondCounter = millis();
     pushDownDelay = 1000;
     score = 0;
+    isDifficultySelected = false; // Redefine a seleção de dificuldade
 }
+
+
+void drawDifficultyMenu() {
+    background(0);
+    fill(255);
+    textSize(32);
+    textAlign(CENTER, CENTER);
+    text("Selecione a Dificuldade:", width / 2, height / 3);
     
+    // Desenha o seletor dinâmico
+    int mouseOverDifficulty = getMouseOverDifficulty(mouseY);
+    for (int i = 0; i < 3; i++) {
+        if (mouseOverDifficulty == i || selectedDifficulty == i) {
+            fill(selectedDifficulty == i ? color(0, 255, 0) : color(255, 0, 0)); // Verde se selecionado, vermelho se apenas sobre
+            rect(width / 2 - 100, height / 2 + (i * 40) - 20, 200, 40);
+        }
+        fill(255); // Cor do texto
+        if (i == 0) text("Facil", width / 2, height / 2);
+        else if (i == 1) text("Medio", width / 2, height / 2 + 40);
+        else text("Dificil", width / 2, height / 2 + 80);
+    }
+}
+
+int getMouseOverDifficulty(int mouseY) {
+    if (mouseY >= height / 2 && mouseY < height / 2 + 40) return 0;
+    else if (mouseY >= height / 2 + 40 && mouseY < height / 2 + 80) return 1;
+    else if (mouseY >= height / 2 + 80) return 2;
+    return -1;
+}
+
+void selectDifficulty(int mouseY) {
+    int difficulty = getMouseOverDifficulty(mouseY);
+    if (difficulty == 0) pushDownDelay = facilDelay;
+    else if (difficulty == 1) pushDownDelay = medioDelay;
+    else if (difficulty == 2) pushDownDelay = dificilDelay;
+    selectedDifficulty = difficulty; // Atualiza a dificuldade selecionada
+    isDifficultySelected = true;
+}
+
+void mousePressed() {
+    selectDifficulty(mouseY);
+}
