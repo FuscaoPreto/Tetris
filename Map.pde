@@ -307,3 +307,26 @@ void drawInterface()
     popMatrix();
 }
     
+void drawIcon(PImage icon) {
+    if(initialPause || gameOver) return;
+
+    // Defina o tamanho desejado para os ícones
+    float iconWidth = 64;
+    float iconHeight = 64;
+
+    for(int i = 0; i < bubbles.length; i++) {
+        pushMatrix();
+
+        if(bubbles[i].x < -70 || bubbles[i].y < -70) {
+            bubbles[i].set(random(resX, resX + resX), random(resY, resY + resY), random(-100, -40));
+        }
+
+        translate(bubbles[i].x, bubbles[i].y, bubbles[i].z);
+        image(icon, 0, 0, iconWidth, iconHeight); // Desenhe o ícone na posição atual com o tamanho especificado
+        bubbles[i] = bubbles[i].add(-abs(noise(bubblesNoise[i].x) * bubbleSpeed[i]), -abs(noise(bubblesNoise[i].y) * bubbleSpeed[i]));
+
+        popMatrix();
+        bubblesNoise[i].x += random(0.001, 0.05);
+        bubblesNoise[i].y += random(0.05, 0.1);
+    }
+}

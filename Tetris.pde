@@ -40,9 +40,9 @@ PShape bubbleShape;
 PShape pauseTextBgShape;
 PShape scoreTextBgShape;
 PShape timerTextBgShape;
-PImage[] textures = new PImage[7];
 PImage icon;
-PImage spritesheet;
+PImage caveira;
+PImage fogo;
 PImage vignette;
 PFont font;
 
@@ -139,18 +139,13 @@ void setup()
     textFont(font);
     textAlign(CENTER, CENTER);
     
-    // Not using the textures from this spritesheet anymore
-    // Instead we are giving colors to the tiles based on the current background color
-    //spritesheet = loadImage("spritesheet.png");
+    fogo = loadImage("fire.png");
+    caveira = loadImage("skull.png");
     vignette = loadImage("vignette.png"); // For darkening the edges of the screen
+
     
-    /*for(int i = 0; i < 7; i++)
-    {
-        textures[i] = spritesheet.get(32 * i, 0, 32, 32);
-    }*/
-    
-    textureMode(REPEAT);
-    sphereDetail(15);
+    //textureMode(REPEAT);
+    //sphereDetail(15);
     
     bgm = new SoundFile(this, "bgm.wav");
     click1 = new SoundFile(this, "click1.wav");
@@ -177,8 +172,15 @@ void draw()
     
     drawBackground();
     
-    drawBubbles();
-    
+    if(selectedDifficulty == 0){
+        drawBubbles();
+    }
+    else if(selectedDifficulty == 1){
+        drawIcon(fogo);
+    }
+    else{
+        drawIcon(caveira);
+    }
     drawVignette();
     
     drawForeground();
