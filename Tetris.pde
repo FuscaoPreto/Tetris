@@ -17,13 +17,13 @@ String[] tetrominoes = new String[7];
 int resX = 800;
 int resY = 800;
 int score = 0;
-int secondsSinceStart = 0; // Seconds since pressing spacebar
+int secondsSinceStart = 1; // Seconds since pressing spacebar
 float secondCounter = 0;
 float pushDownTimer = 0;
 float pushDownDelay = 1000; // Time between automatic pushdown of the falling piece
 boolean gameOver = false;
 boolean initialPause = true;
-
+int minutsSinceStart = 0;
 // menu
 boolean menu = true;
 boolean game = false;
@@ -181,11 +181,11 @@ void draw() {
             update();
             drawBackground();
 
-            if(selectedDifficulty == 0)
+            if(pushDownDelay > medioDelay)
                 drawBubbles();
-            else if(selectedDifficulty == 1)
+            else if(pushDownDelay > dificilDelay)
                 drawIcon(x);
-            else if(selectedDifficulty == 2)
+            else if(pushDownDelay > impossivelDelay)
                 drawIcon(fogo);
             else
                 drawIcon(caveira);
@@ -464,24 +464,10 @@ void placePieceDownInstantly()
 // Changes speed of automatic pushdown according to time elapsed, somewhat in tune with the music
 void updateGameSpeed()
 {
-    
-    if(secondsSinceStart >= 248) 
-    {
-        pushDownDelay = 70;
-    }
-    else if(secondsSinceStart >= 180)
-    {
-        pushDownDelay = 300;
-    }
-    else if(secondsSinceStart >= 120)
-    {
-        pushDownDelay = 500;
-    }
-    else if(secondsSinceStart >= 60) 
-    {
-        pushDownDelay = 700;
-    }
-    
+ if(secondsSinceStart % 60 == 0)
+ {
+     pushDownDelay = pushDownDelay * 0.8;
+ }   
 }
 
 // Thanks to Javidx9 for this algorithm - https://www.youtube.com/watch?v=8OK8_tHeCIA
@@ -602,10 +588,10 @@ void drawDifficultyMenu() {
             rect(0, 0 + (i * 40), 200, 40);
         }
         fill(255); // Cor do texto
-        if (i == 0) text("Facil", 0, 0);
-        else if (i == 1) text("Medio", 0, 40);
-        else if (i == 2)text("Dificil", 0, 80);
-        else text("Impossivel", 0, 120);
+        if (i == 0) text("Facil - Bolhas", 0, 0);
+        else if (i == 1) text("Medio - X", 0, 40);
+        else if (i == 2)text("Dificil - Fogo", 0, 80);
+        else text("Impossivel - Caveira", 0, 120);
     }
 
     popMatrix();
@@ -641,8 +627,8 @@ void drawCreditsMenu() {
     text("Créditos", 0, 0);
     
     // Lista de nomes e RAs
-    String[] nomes = {"Igor de Souza Bertelli", "Otávio Pereira Cardoso", "Carlos", "Felipe"};
-    String[] ras = {"RA 202121613", "RA 202318690", "RA 34567", "RA 45678"};
+    String[] nomes = {"Igor de Souza Bertelli", "Otavio Pereira Cardoso", "Carlos", "Felipe gaboardi Tralli"};
+    String[] ras = {"RA 202121613", "RA 202318690", "RA 34567", "RA 202104643"};
     
     for (int i = 0; i < nomes.length; i++) {
         text(nomes[i] + " - " + ras[i], 0, 70 + i * 30);
