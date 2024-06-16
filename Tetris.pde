@@ -630,15 +630,6 @@ void selectDifficulty(int mouseY) {
     isDifficultySelected = true;
 }
 
-// void mousePressed() {
-//     selectDifficulty(mouseY);
-//     if (mouseX >= width / 2 - 50 && mouseX <= width / 2 + 50 && mouseY >= height - 100 && mouseY <= height - 60) {
-//         // Aqui você pode chamar a função que desenha o menu inicial
-//         // Por exemplo: drawMainMenu();
-//     }
-    
-// }
-
 void drawCreditsMenu() {
     pushMatrix();
 
