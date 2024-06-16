@@ -24,6 +24,12 @@ float pushDownDelay = 1000; // Time between automatic pushdown of the falling pi
 boolean gameOver = false;
 boolean initialPause = true;
 
+// menu
+boolean menu = true;
+boolean game = false;
+boolean history = false;
+boolean credits = false;
+
 // Dificuldades
 int facilDelay = 1000;
 int medioDelay = 500;
@@ -165,43 +171,42 @@ void setup()
     getNewPiece();
 }
 
-void draw() 
-{   
-    if (!isDifficultySelected) {
-        drawDifficultyMenu();
-    } else {
-        
-         update();
+void draw() {   
+    if(menu)
+        drawMainMenu();
+    else if(game) {
+        if(!isDifficultySelected)
+            drawDifficultyMenu();
+        else {
+            update();
+            drawBackground();
+
+            if(selectedDifficulty == 0)
+                drawBubbles();
+            else if(selectedDifficulty == 1)
+                drawIcon(x);
+            else if(selectedDifficulty == 2)
+                drawIcon(fogo);
+            else
+                drawIcon(caveira);
+
+            drawVignette();
+            drawForeground();
+            drawGhostPiece();
+            drawFallingPiece();
+            drawInterface();
+
+            if(initialPause) 
+                drawPauseScreen();
+            if(gameOver) 
+                drawGameOverScreen();
+        }
+    } 
     
-    drawBackground();
-    
-    if(selectedDifficulty == 0){
-        drawBubbles();
-    }
-    else if(selectedDifficulty == 1){
-        drawIcon(x);
-    }
-    else if(selectedDifficulty == 2){
-        drawIcon(fogo);
-    }
-    else{
-        drawIcon(caveira);
-    }
-    drawVignette();
-    
-    drawForeground();
-    
-    drawGhostPiece();
-    
-    drawFallingPiece();
-    
-    drawInterface();
-    
-    if(initialPause) drawPauseScreen();
-    
-    if(gameOver) drawGameOverScreen();
-    }  
-   
+    else if (history)
+        drawHistoryMenu();
+    else if (credits)
+        drawCreditsMenu();
 }
 
 // Main gameplay logic loop - push the current piece down, check inputs and remove full rows if they exist
@@ -510,10 +515,76 @@ void resetGameState()
     pushDownDelay = 1000;
     score = 0;
     isDifficultySelected = false; // Redefine a seleção de dificuldade
+    game = false;
+    menu = true;
 }
 
+void drawMainMenu() {
+    pushMatrix();
+    
+    background(0);
+    fill(255);
+
+    // titulo
+    textSize(50);
+    textAlign(LEFT, TOP);
+    text("TETRIS", 50, 65);
+
+    // opcoes
+    translate(700, 200);
+
+    textSize(30);
+    textAlign(RIGHT, CENTER);
+    text("JOGAR", 0, 0);
+    text("HISTORIA", 0, 50);
+    text("CREDITOS", 0, 100);
+    text("SAIR", 0, 150);
+
+    popMatrix();
+}
+
+void mousePressed() {
+    if(menu) {
+        if(mouseX > 500 && mouseX < 800) {
+            if(mouseY > 200 && mouseY < 230) {
+                menu = false;
+                game = true;
+            } 
+            else if (mouseY >= 250 && mouseY < 280) {
+                menu = false;
+                history = true;
+            } 
+            else if (mouseY >= 300 && mouseY < 330) {
+                menu = false;
+                credits = true;
+            } 
+            else if (mouseY >= 350 && mouseY < 380) 
+                exit();
+        }
+    }
+
+    if(game) {
+        selectDifficulty(mouseY);
+    }
+
+    if(history) {
+        if(mouseX > width/2 - 50 && mouseX < width/2 + 50 && mouseY > height - 130 && mouseY < height - 90) {
+            history = false;
+            menu = true;
+        }
+    }
+
+    if(credits) {
+        if(mouseX > width/2 - 50 && mouseX < width/2 + 50 && mouseY > height - 100 && mouseY < height - 60) {
+            credits = false;
+            menu = true;
+        }
+    }
+}
 
 void drawDifficultyMenu() {
+    pushMatrix();
+
     background(0);
     fill(255);
     textSize(32);
@@ -521,18 +592,23 @@ void drawDifficultyMenu() {
     text("Selecione a Dificuldade:", width / 2, height / 3);
     
     // Desenha o seletor dinâmico
+    translate(width / 2, height / 2);
+
     int mouseOverDifficulty = getMouseOverDifficulty(mouseY);
     for (int i = 0; i < 4; i++) {
         if (mouseOverDifficulty == i || selectedDifficulty == i) {
             fill(selectedDifficulty == i ? color(0, 255, 0) : color(255, 0, 0)); // Verde se selecionado, vermelho se apenas sobre
-            rect(width / 2 - 100, height / 2 + (i * 40) - 20, 200, 40);
+            rectMode(CENTER);
+            rect(0, 0 + (i * 40), 200, 40);
         }
         fill(255); // Cor do texto
-        if (i == 0) text("Facil", width / 2, height / 2);
-        else if (i == 1) text("Medio", width / 2, height / 2 + 40);
-        else if (i == 2)text("Dificil", width / 2, height / 2 + 80);
-        else text("Impossivel", width / 2, height / 2 + 120);
+        if (i == 0) text("Facil", 0, 0);
+        else if (i == 1) text("Medio", 0, 40);
+        else if (i == 2)text("Dificil", 0, 80);
+        else text("Impossivel", 0, 120);
     }
+
+    popMatrix();
 }
 
 int getMouseOverDifficulty(int mouseY) {
@@ -548,38 +624,114 @@ void selectDifficulty(int mouseY) {
     if (difficulty == 0) pushDownDelay = facilDelay;
     else if (difficulty == 1) pushDownDelay = medioDelay;
     else if (difficulty == 2) pushDownDelay = dificilDelay;
-    else pushDownDelay = impossivelDelay;
+    else if(difficulty == 3) pushDownDelay = impossivelDelay;
+    else return;
     selectedDifficulty = difficulty; // Atualiza a dificuldade selecionada
     isDifficultySelected = true;
 }
 
-void mousePressed() {
-    selectDifficulty(mouseY);
-    if (mouseX >= width / 2 - 50 && mouseX <= width / 2 + 50 && mouseY >= height - 100 && mouseY <= height - 60) {
-        // Aqui você pode chamar a função que desenha o menu inicial
-        // Por exemplo: drawMainMenu();
-    }
+// void mousePressed() {
+//     selectDifficulty(mouseY);
+//     if (mouseX >= width / 2 - 50 && mouseX <= width / 2 + 50 && mouseY >= height - 100 && mouseY <= height - 60) {
+//         // Aqui você pode chamar a função que desenha o menu inicial
+//         // Por exemplo: drawMainMenu();
+//     }
     
-}
+// }
 
 void drawCreditsMenu() {
+    pushMatrix();
+
     background(0);
     fill(255);
-    textSize(20);
+    textSize(25);
     textAlign(CENTER, CENTER);
-    text("Créditos", width / 2, height / 4);
+    translate(width / 2, height / 4);
+    text("Créditos", 0, 0);
     
     // Lista de nomes e RAs
     String[] nomes = {"Igor de Souza Bertelli", "Otávio Pereira Cardoso", "Carlos", "Felipe"};
     String[] ras = {"RA 202121613", "RA 202318690", "RA 34567", "RA 45678"};
     
     for (int i = 0; i < nomes.length; i++) {
-        text(nomes[i] + " - " + ras[i], width / 2, height / 3 + i * 30);
+        text(nomes[i] + " - " + ras[i], 0, 70 + i * 30);
     }
     
     // Botão de voltar
+    translate(0, 500);
+
     fill(255, 0, 0); // Cor do botão
-    rect(width / 2 - 50, height - 100, 100, 40); // Desenha o botão
+    rectMode(CENTER);
+    rect(0, 0, 100, 40); // Desenha o botão
+
     fill(255); // Cor do texto
-    text("Voltar", width / 2, height - 80); // Texto do botão
+    textAlign(CENTER, CENTER);
+    text("Voltar", 0, 0); // Texto do botão
+
+    popMatrix();
+}
+
+void drawHistoryMenu() {
+    pushMatrix();
+
+    background(0);
+    fill(255);
+    
+    // titulo
+    textSize(40);
+    textAlign(CENTER, CENTER);
+    text("Historia", width/2, 50);
+    
+    // texto
+    textSize(25);
+    textAlign(LEFT, TOP);
+    String[] historia = {" No mundo pixelado de Tetrion, os Tetrominos, blocos magicos, viviam em harmonia ate que a Entropia, uma forca maligna, comecou a corrompe-los. "
+                    + "Tetrion, um jovem Tetrite com a habilidade rara de manipular Tetrominos, foi escolhido para restaurar a ordem. ",
+                    " Guiado pelo Sabio Bloco, Tetrion enfrentou desafios cada vez mais dificeis, onde os Tetrominos caiam mais rapido e de forma desordenada. "
+                    + "Ele encontrou aliados valiosos, como Tetronius e Tetralina, que ajudaram com sabedoria e invenções. ",
+                    " A cada linha completa de blocos, Tetrion liberava poderes magicos que purificavam os Tetrominos corrompidos. Apos muitos niveis desafiadores, ele confrontou a Entropia em uma batalha final epica. "
+                    + "Usando todas as suas habilidades e a ajuda dos amigos, Tetrion organizou os Tetrominos perfeitamente, derrotando a Entropia e restaurando a paz. ",
+                    " Tetrion foi aclamado como heroi, e a paz voltou a reinar em Tetrion. "
+                    + "Sua historia se tornou uma lenda, inspirando futuras gerações a lutar pelo equilibrio e pela ordem no mundo pixelado."};
+    
+    float margin = 40;
+    float x = margin;
+    float y = 120;
+    float maxWidth = width - 2 * margin;
+
+    // escreve texto
+    for(int i = 0; i < historia.length; i++) {
+        String[] words = historia[i].split(" ");
+        String line = "";
+
+        for(String word : words) {
+            String testLine = line + word + " ";
+            
+            if(textWidth(testLine) > maxWidth) {
+                text(line, x, y);
+                line = word + " ";
+                y += 25;
+            }
+            else 
+                line = testLine;
+        }
+
+        text(line, x, y); // escreve ultima linha
+
+        x = margin; // reseta linha
+        y += 35; // pula linha
+    }
+
+    // Botão de voltar
+    translate(width/2, height - 110);
+
+    fill(255, 0, 0); // Cor do botão
+    rectMode(CENTER);
+    rect(0, 0, 100, 40); // Desenha o botão
+
+    fill(255); // Cor do texto
+    textAlign(CENTER, CENTER);
+    text("Voltar", 0, 0); // Texto do botão
+
+    popMatrix();
 }
