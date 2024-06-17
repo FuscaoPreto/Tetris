@@ -615,7 +615,7 @@ void drawDifficultyMenu() {
         if (mouseOverDifficulty == i || selectedDifficulty == i) {
             fill(selectedDifficulty == i ? color(0, 255, 0) : color(255, 0, 0)); // Verde se selecionado, vermelho se apenas sobre
             rectMode(CENTER);
-            rect(0, 0 + (i * 40), 200, 40);
+            rect(0, 0 + (i * 40), 290, 40);
         }
         fill(255); // Cor do texto
         if (i == 0) text("Facil - Bolhas", 0, 0);
