@@ -539,6 +539,7 @@ int getMouseOverOption(int mouseY) {
     else if (mouseY >= 250 && mouseY < 300) return 1;
     else if (mouseY >= 300 && mouseY < 350) return 2;
     else if (mouseY >= 350 && mouseY < 400) return 3;
+    else if (mouseY >= 400 && mouseY < 450) return 4;
     return -1;
 }
 
@@ -782,14 +783,14 @@ void drawInstructionsMenu() {
     // texto
     textSize(25);
     textAlign(LEFT, TOP);
-    String[] historia = {"A - Move o bloco para esquerda "
-                    + "D - Move o bloco para direita ",
-                    "S - Faz com que o bloco caia mais rápido "
-                    + "Espaco - Faz com que o bloco caia instantaneamente",
+    String[] historia = {"A - Move o bloco para esquerda ",
+                     "D - Move o bloco para direita ",
+                    "S - Faz com que o bloco caia mais rápido ",
+                    "Espaco - Faz com que o bloco caia instantaneamente",
                     "Tecla de seta para esquerda e direita rotacionam o bloco"
-                    + "Tecla de esquerda rotaciona no sentido horario",
+                    , "Tecla de esquerda rotaciona no sentido horario",
                     "Tecla da direita rotaciona no sentido anti-horario "
-                    + "ESC - Fecha o jogo."};
+                    ,"ESC - Fecha o jogo."};
     
     float margin = 40;
     float x = margin;
