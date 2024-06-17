@@ -37,7 +37,7 @@ int dificilDelay = 250;
 int impossivelDelay = 100;
 boolean isDifficultySelected = false;
 int selectedDifficulty = -1; // -1 significa que nenhuma dificuldade foi selecionada
-
+boolean instructions = false;
 
 // PShape objects are used to render each different thing on screen
 PShape boxShape;
@@ -522,15 +522,14 @@ void drawMainMenu() {
     textSize(30);
     textAlign(CENTER, CENTER); 
     int mouseOverOption = getMouseOverOption(mouseY);
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
         if (mouseOverOption == i) {
             fill(255, 0, 0); // Cor do seletor
             rectMode(CENTER);
             rect(0, 25 + (i * 50), 200, 40);
         }
         fill(255); // Cor do texto
-        text(i == 0 ? "JOGAR" : i == 1 ? "HISTORIA" : i == 2 ? "CREDITOS" : "SAIR", 0, 25 + (i * 50));
-    }
+        text(i == 0 ? "JOGAR" : i == 1 ? "HISTORIA" : i == 2 ? "CREDITOS" : i == 3 ? "Tutorial" : "SAIR", 0, 25 + (i * 50));    }
     popMatrix();
 }
 
@@ -540,6 +539,7 @@ int getMouseOverOption(int mouseY) {
     else if (mouseY >= 250 && mouseY < 300) return 1;
     else if (mouseY >= 300 && mouseY < 350) return 2;
     else if (mouseY >= 350 && mouseY < 400) return 3;
+    else if (mouseY >= 400 && mouseY < 450) return 4;
     return -1;
 }
 
@@ -562,14 +562,22 @@ void mousePressed() {
                 credits = true;
                 game = false;
                 //isDifficultySelected = false; // Garante que a seleção de dificuldade seja redefinida
-            } 
-            else if (mouseY >= 350 && mouseY < 380) 
+            }
+            // Dentro de mousePressed(), adicione uma condição para verificar se a opção de instruções foi selecionada
+            if (mouseY >= 350 && mouseY < 400) {
+            instructions = true;
+            menu = false;
+} 
+            else if (mouseY >= 400 && mouseY < 450) 
                 exit();
         }
     }
 
     if(game) {
         selectDifficulty(mouseY);
+    }
+    if(instructions){
+        drawInstructionsMenu();
     }
 
     if(history) {
@@ -585,6 +593,11 @@ void mousePressed() {
             menu = true;
         }
     }
+    // Dentro de mousePressed(), adicione uma condição para o botão "Voltar" no menu de instruções
+    if (instructions && mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height - 110 - 20 && mouseY < height - 110 + 20) {
+    instructions = false;
+    menu = true;
+}
     if(isDifficultySelected) {
         // Calcula a posição central do botão "Voltar" no menu de dificuldades
         float btnX = width / 2 - 50; // Centro menos metade da largura do botão
@@ -712,6 +725,72 @@ void drawHistoryMenu() {
                     + "Usando todas as suas habilidades e a ajuda dos amigos, Tetrion organizou os Tetrominos perfeitamente, derrotando a Entropia e restaurando a paz. ",
                     " Tetrion foi aclamado como heroi, e a paz voltou a reinar em Tetrion. "
                     + "Sua historia se tornou uma lenda, inspirando futuras gerações a lutar pelo equilibrio e pela ordem no mundo pixelado."};
+    
+    float margin = 40;
+    float x = margin;
+    float y = 120;
+    float maxWidth = width - 2 * margin;
+
+    // escreve texto
+    for(int i = 0; i < historia.length; i++) {
+        String[] words = historia[i].split(" ");
+        String line = "";
+
+        for(String word : words) {
+            String testLine = line + word + " ";
+            
+            if(textWidth(testLine) > maxWidth) {
+                text(line, x, y);
+                line = word + " ";
+                y += 25;
+            }
+            else 
+                line = testLine;
+        }
+
+        text(line, x, y); // escreve ultima linha
+
+        x = margin; // reseta linha
+        y += 35; // pula linha
+    }
+
+    // Botão de voltar
+    translate(width/2, height - 110);
+
+    fill(255, 0, 0); // Cor do botão
+    rectMode(CENTER);
+    rect(0, 0, 100, 40); // Desenha o botão
+
+    fill(255); // Cor do texto
+    textAlign(CENTER, CENTER);
+    text("Voltar", 0, 0); // Texto do botão
+
+    popMatrix();
+}
+
+
+void drawInstructionsMenu() {
+    pushMatrix();
+
+    background(0);
+    fill(255);
+    
+    // titulo
+    textSize(40);
+    textAlign(CENTER, CENTER);
+    text("Tutorial", width/2, 50);
+    
+    // texto
+    textSize(25);
+    textAlign(LEFT, TOP);
+    String[] historia = {"A - Move o bloco para esquerda ",
+                     "D - Move o bloco para direita ",
+                    "S - Faz com que o bloco caia mais rápido ",
+                    "Espaco - Faz com que o bloco caia instantaneamente",
+                    "Tecla de seta para esquerda e direita rotacionam o bloco"
+                    , "Tecla de esquerda rotaciona no sentido horario",
+                    "Tecla da direita rotaciona no sentido anti-horario "
+                    ,"ESC - Fecha o jogo."};
     
     float margin = 40;
     float x = margin;
