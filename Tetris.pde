@@ -529,7 +529,7 @@ void drawMainMenu() {
             rect(0, 25 + (i * 50), 200, 40);
         }
         fill(255); // Cor do texto
-        text(i == 0 ? "JOGAR" : i == 1 ? "HISTORIA" : i == 2 ? "CREDITOS" : i == 3 ? "Tutorial" : "SAIR", 0, 25 + (i * 50));    }
+        text(i == 0 ? "JOGAR" : i == 1 ? "HISTORIA" : i == 2 ? "CREDITOS" : i == 3 ? "TUTORIAL" : "SAIR", 0, 25 + (i * 50));    }
     popMatrix();
 }
 
@@ -679,7 +679,7 @@ void drawCreditsMenu() {
     textSize(25);
     textAlign(CENTER, CENTER);
     translate(width / 2, height / 4);
-    text("Créditos", 0, 0);
+    text("Creditos", 0, 0);
     
     // Lista de nomes e RAs
     String[] nomes = {"Igor de Souza Bertelli", "Otavio Pereira Cardoso", "Carlos Eduardo de Lima Campos", "Felipe gaboardi Tralli"};
