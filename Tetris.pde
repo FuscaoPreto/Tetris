@@ -29,6 +29,8 @@ boolean menu = true;
 boolean game = false;
 boolean history = false;
 boolean credits = false;
+//teste
+boolean mostrarBotaoVoltar = false;
 
 // Dificuldades
 int facilDelay = 1000;
@@ -112,7 +114,7 @@ void setup()
     ((PGraphicsOpenGL)g).textureSampling(3);
 
     // método para mostrar a tela de seleção de dificuldade
-    drawDifficultyMenu();
+    //drawDifficultyMenu();
     // I'm using a bunch of shape objects because for some reason rect() doesn't work properly
     shapeMode(CORNER);
     boxShape = createShape(BOX, 32, 32, 1);
@@ -516,7 +518,7 @@ void drawMainMenu() {
     // opcoes
     translate(700, 200);
     textSize(30);
-    textAlign(CENTER, CENTER); // Alterado para centralizar o texto
+    textAlign(CENTER, CENTER); 
     int mouseOverOption = getMouseOverOption(mouseY);
     for (int i = 0; i < 4; i++) {
         if (mouseOverOption == i) {
@@ -525,7 +527,6 @@ void drawMainMenu() {
             rect(0, 25 + (i * 50), 200, 40);
         }
         fill(255); // Cor do texto
-        // Ajuste na posição do texto para alinhar com o retângulo
         text(i == 0 ? "JOGAR" : i == 1 ? "HISTORIA" : i == 2 ? "CREDITOS" : "SAIR", 0, 25 + (i * 50));
     }
     popMatrix();
@@ -577,6 +578,12 @@ void mousePressed() {
             menu = true;
         }
     }
+    if(isDifficultySelected) {
+        if(mouseX > width/2 - 50 && mouseX < width/2 + 50 && mouseY > height - 100 && mouseY < height - 50) {
+            isDifficultySelected = false;
+            menu = true;
+        }
+    }
 }
 
 void drawDifficultyMenu() {
@@ -604,6 +611,16 @@ void drawDifficultyMenu() {
         else if (i == 2)text("Dificil - Fogo", 0, 80);
         else text("Impossivel - Caveira", 0, 120);
     }
+    // Botão de voltar
+    translate(0, 500);
+
+    fill(255, 0, 0); // Cor do botão
+    rectMode(CENTER);
+    rect(0, 0, 100, 40); // Desenha o botão
+
+    fill(255); // Cor do texto
+    textAlign(CENTER, CENTER);
+    text("Voltar", 0, 0); // Texto do botão
 
     popMatrix();
 }
@@ -638,8 +655,8 @@ void drawCreditsMenu() {
     text("Créditos", 0, 0);
     
     // Lista de nomes e RAs
-    String[] nomes = {"Igor de Souza Bertelli", "Otavio Pereira Cardoso", "Carlos", "Felipe gaboardi Tralli"};
-    String[] ras = {"RA 202121613", "RA 202318690", "RA 34567", "RA 202104643"};
+    String[] nomes = {"Igor de Souza Bertelli", "Otavio Pereira Cardoso", "Carlos Eduardo de Lima Campos", "Felipe gaboardi Tralli"};
+    String[] ras = {"RA 202121613", "RA 202318690", "RA 202235654", "RA 202104643"};
     
     for (int i = 0; i < nomes.length; i++) {
         text(nomes[i] + " - " + ras[i], 0, 70 + i * 30);
