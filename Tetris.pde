@@ -504,35 +504,46 @@ void resetGameState()
     game = false;
     menu = true;
 }
-
 void drawMainMenu() {
     pushMatrix();
     
     background(0);
     fill(255);
-
     // titulo
     textSize(50);
     textAlign(LEFT, TOP);
     text("TETRIS", 50, 65);
-
     // opcoes
     translate(700, 200);
-
     textSize(30);
-    textAlign(RIGHT, CENTER);
-    text("JOGAR", 0, 0);
-    text("HISTORIA", 0, 50);
-    text("CREDITOS", 0, 100);
-    text("SAIR", 0, 150);
-
+    textAlign(CENTER, CENTER); // Alterado para centralizar o texto
+    int mouseOverOption = getMouseOverOption(mouseY);
+    for (int i = 0; i < 4; i++) {
+        if (mouseOverOption == i) {
+            fill(255, 0, 0); // Cor do seletor
+            rectMode(CENTER);
+            rect(0, 25 + (i * 50), 200, 40);
+        }
+        fill(255); // Cor do texto
+        // Ajuste na posição do texto para alinhar com o retângulo
+        text(i == 0 ? "JOGAR" : i == 1 ? "HISTORIA" : i == 2 ? "CREDITOS" : "SAIR", 0, 25 + (i * 50));
+    }
     popMatrix();
+}
+
+int getMouseOverOption(int mouseY) {
+    // Ajuste nas condições para refletir a nova posição do texto e do retângulo
+    if (mouseY >= 200 && mouseY < 250) return 0;
+    else if (mouseY >= 250 && mouseY < 300) return 1;
+    else if (mouseY >= 300 && mouseY < 350) return 2;
+    else if (mouseY >= 350 && mouseY < 400) return 3;
+    return -1;
 }
 
 void mousePressed() {
     if(menu) {
         if(mouseX > 500 && mouseX < 800) {
-            if(mouseY > 200 && mouseY < 230) {
+            if(mouseY > 200 && mouseY < 250) {
                 menu = false;
                 game = true;
             } 
