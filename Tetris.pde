@@ -547,14 +547,19 @@ void mousePressed() {
             if(mouseY > 200 && mouseY < 250) {
                 menu = false;
                 game = true;
+                isDifficultySelected = false; // Garante que a seleção de dificuldade seja redefinida
             } 
             else if (mouseY >= 250 && mouseY < 280) {
                 menu = false;
                 history = true;
+                game = false;
+                //isDifficultySelected = false; // Garante que a seleção de dificuldade seja redefinida
             } 
             else if (mouseY >= 300 && mouseY < 330) {
                 menu = false;
                 credits = true;
+                game = false;
+                //isDifficultySelected = false; // Garante que a seleção de dificuldade seja redefinida
             } 
             else if (mouseY >= 350 && mouseY < 380) 
                 exit();
@@ -579,7 +584,12 @@ void mousePressed() {
         }
     }
     if(isDifficultySelected) {
-        if(mouseX > width/2 - 50 && mouseX < width/2 + 50 && mouseY > height - 100 && mouseY < height - 50) {
+        // Calcula a posição central do botão "Voltar" no menu de dificuldades
+        float btnX = width / 2 - 50; // Centro menos metade da largura do botão
+        float btnY = height / 2 + 300 - 20; // Centro mais deslocamento para baixo menos metade da altura do botão
+
+        // Verifica se o clique do mouse está dentro da área do botão "Voltar"
+        if(mouseX > btnX && mouseX < btnX + 100 && mouseY > btnY && mouseY < btnY + 40) {
             isDifficultySelected = false;
             menu = true;
         }
@@ -612,16 +622,18 @@ void drawDifficultyMenu() {
         else text("Impossivel - Caveira", 0, 120);
     }
     // Botão de voltar
-    translate(0, 500);
-
-    fill(255, 0, 0); // Cor do botão
+    translate(0, 300);
+    // Verifica se o mouse está sobre o botão "Voltar"
+    if(mouseX > width / 2 - 50 && mouseX < width / 2 + 50 && mouseY > height / 2 + 300 - 20 && mouseY < height / 2 + 300 + 20) {
+        fill(255, 0, 0); // Cor do botão quando o mouse está sobre
+    } else {
+        fill(0); // Cor do botão quando o mouse não está sobre (cinza, por exemplo)
+    }
     rectMode(CENTER);
     rect(0, 0, 100, 40); // Desenha o botão
-
     fill(255); // Cor do texto
     textAlign(CENTER, CENTER);
     text("Voltar", 0, 0); // Texto do botão
-
     popMatrix();
 }
 
