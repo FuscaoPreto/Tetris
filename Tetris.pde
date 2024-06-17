@@ -29,8 +29,6 @@ boolean menu = true;
 boolean game = false;
 boolean history = false;
 boolean credits = false;
-//teste
-boolean mostrarBotaoVoltar = false;
 
 // Dificuldades
 int facilDelay = 1000;
@@ -55,6 +53,7 @@ PImage x;
 PImage fogo;
 PImage vignette;
 PFont font;
+PImage backgroundImage; // Variável global para a imagem de fundo
 
 ArrayList<Integer> blocksToRemove = new ArrayList<Integer>();
 float blockDissolveTimer = 0;
@@ -113,8 +112,10 @@ void setup()
     frameRate(60);
     ((PGraphicsOpenGL)g).textureSampling(3);
 
-    // método para mostrar a tela de seleção de dificuldade
-    //drawDifficultyMenu();
+    // carregando a imagem de fundo
+
+    backgroundImage = loadImage("data/tetris.png");
+
     // I'm using a bunch of shape objects because for some reason rect() doesn't work properly
     shapeMode(CORNER);
     boxShape = createShape(BOX, 32, 32, 1);
@@ -510,6 +511,7 @@ void drawMainMenu() {
     pushMatrix();
     
     background(0);
+     image(backgroundImage, 0, 0, width, height); // imagem de fundo do menu
     fill(255);
     // titulo
     textSize(50);
