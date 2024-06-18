@@ -1,18 +1,5 @@
 import processing.sound.*;
 
-/* 
-* Thanks to Javidx9 for his tutorial on programming Tetris, it was of great help - https://www.youtube.com/watch?v=8OK8_tHeCIA
-*
-* Sources for sound effects, music and textures: 
-* Berusky 2 OST - Action Puzzle Game Soundtrack - https://opengameart.org/content/berusky-ii-ost-action-puzzle-game-soundtrack-23-tracks
-
-* Thanks to MATTIX for these sound effects: 
-* Click1.wav - https://freesound.org/people/MATTIX/sounds/348022/
-* Click2.wav - https://freesound.org/people/MATTIX/sounds/349873/
-
-* Source for the textures (which are currently disabled) - https://opengameart.org/content/8-bit-tetris
-*/
-
 String[] tetrominoes = new String[7];
 int resX = 800;
 int resY = 800;
@@ -39,7 +26,7 @@ boolean isDifficultySelected = false;
 int selectedDifficulty = -1; // -1 significa que nenhuma dificuldade foi selecionada
 boolean instructions = false;
 
-// PShape objects are used to render each different thing on screen
+// Objetos para renderização
 PShape boxShape;
 PShape fillShape;
 PShape mapFillerShape;
@@ -72,8 +59,7 @@ void settings()
 
 void setup()
 {        
-    // Define the shape of the tetrominoes
-    // Each X marks a tile of the shape
+    // Define o formato das peças
     tetrominoes[0] =  "--X-"; // First assignment needs to be "=" to replace the initial null value
     tetrominoes[0] += "--X-";
     tetrominoes[0] += "--X-";
@@ -116,7 +102,6 @@ void setup()
 
     backgroundImage = loadImage("data/tetris.png");
 
-    // I'm using a bunch of shape objects because for some reason rect() doesn't work properly
     shapeMode(CORNER);
     boxShape = createShape(BOX, 32, 32, 1);
     fillShape = createShape(BOX, resX, resY, 1);
@@ -153,17 +138,13 @@ void setup()
     fogo = loadImage("fire.png");
     caveira = loadImage("skull.png");
     x = loadImage("x.png");
-    vignette = loadImage("vignette.png"); // For darkening the edges of the screen
-
-    
-    //textureMode(REPEAT);
-    //sphereDetail(15);
+    vignette = loadImage("vignette.png");
     
     bgm = new SoundFile(this, "bgm.wav");
     click1 = new SoundFile(this, "click1.wav");
     click2 = new SoundFile(this, "click2.wav");
     
-    // Some audio mixing so we don't blow anyone's ears up
+    // Volume do áudio
     bgm.amp(0.1);
     click1.amp(0.8);
     click2.amp(0.4);
@@ -212,7 +193,7 @@ void draw() {
         drawCreditsMenu();
 }
 
-// Main gameplay logic loop - push the current piece down, check inputs and remove full rows if they exist
+// Lógica principal do jogo
 void update()
 {
     //println(frameRate);
@@ -229,18 +210,15 @@ void update()
                 secondCounter = millis();
             }
             
-            // Remove rows of blocks if there are any to be removed
+            // Remove a linha se ela estiver completa
             if(blocksToRemove.size() > 0) 
             {
                 dissolveBlocks();
                 pushDownTimer = millis();
-                return; // Pause until blocks have been removed
+                return;
             }
             
             checkInputs();
-            
-            // If the falling piece wasn't manually pushed down by the player, push it down automatically after a delay
-            // pushDownTimer is manipulated to control when or if the piece should be pushed down automatically
             if(millis() - pushDownTimer > pushDownDelay) 
             {
                 
@@ -262,7 +240,7 @@ void update()
     
 }
 
-// Checks for 10 blocks on each row
+// Checa se existem 10 blocos na linha
 void checkForRows() 
 {
     
@@ -294,12 +272,7 @@ void checkForRows()
 
 }
 
-// Removes rows of blocks and moves all the tiles above down N amount of steps
-// The basic logic:
-// 1. Find the height for each row we need to remove
-// 2. Start by removing the lowest row we need to remove
-// 3. Displace all blocks above the rows we remove
-// 4. How much we displace the blocks needs to be increased by 1 for each removed row below it
+
 void dissolveBlocks() 
 {
     int dissolveTime = 200;
@@ -352,7 +325,6 @@ void dissolveBlocks()
     
 }
 
-// Locks the current piece as part of the map and checks the game over condition
 void lockCurrPieceToMap() 
 {
     click2.play();
@@ -396,8 +368,6 @@ void lockCurrPieceToMap()
     }
     
 }
-
-// Check if the piece fits in the position it's trying to move into
 boolean checkIfPieceFits(int movingToX, int movingToY, int rotation) 
 {
     for(int y = 0; y < 4; y++) 
@@ -441,7 +411,6 @@ boolean checkIfPieceFits(int movingToX, int movingToY, int rotation)
     return true;
 }
 
-// Instantly place the current piece at the lowest point directly below it
 void placePieceDownInstantly() 
 {
     int lastFitY = 0;
@@ -464,7 +433,6 @@ void placePieceDownInstantly()
     
 }
 
-// Changes speed of automatic pushdown according to time elapsed, somewhat in tune with the music
 void updateGameSpeed()
 {
  if(secondsSinceStart % 60 == 0)
@@ -472,8 +440,6 @@ void updateGameSpeed()
      pushDownDelay = pushDownDelay * 0.8;
  }   
 }
-
-// Thanks to Javidx9 for this algorithm - https://www.youtube.com/watch?v=8OK8_tHeCIA
 int rotate(int rx, int ry, int rState) 
 {
     
