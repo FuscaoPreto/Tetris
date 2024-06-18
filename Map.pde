@@ -12,24 +12,22 @@ color[] targetBgColors =
 };
 
 color backgroundColor = targetBgColors[0];
-color[] tileColors = new color[mapWidth * mapHeight]; // Keeps track of the color of all tiles
+color[] tileColors = new color[mapWidth * mapHeight];
 int targetColorIndex = 0;
 boolean changeTargetNextFrame = false;
 boolean waitedSomeFrames = false;
 int bgChangeFrameCounter = 0;
 
-// "Bubbles" refer to the floating spheres in the background
 PVector[] bubbles = new PVector[20];
 float[] bubbleSpeed = new float[bubbles.length];
 PVector[] bubblesNoise = new PVector[bubbles.length];
 
-// DISCLAIMER: the rendering code is horribly inefficient, enter at your own risk
 
 void createMap() 
 {
     targetColorIndex = int(random(0, targetBgColors.length));
     
-    //Create map border
+    //Borda
     for(int y = 0; y < mapHeight; y++) 
     {
         
@@ -47,7 +45,7 @@ void createMap()
         
     }
     
-    //Set tile colors
+    //Cor dos tijolos
     for(int y = 0; y < mapHeight; y++) 
     {
         
@@ -58,7 +56,7 @@ void createMap()
         
     }
     
-    //Create bubbles
+    //Bolhas
     for(int i = 0; i < bubbles.length; i++) 
     {
         bubbles[i] = new PVector(random(resX, resX + resX), random(resY, resY + resY), random(-100, -40));
@@ -68,7 +66,6 @@ void createMap()
     
 }
 
-// Render the darkening effect around the edges of the screen
 void drawVignette()
 {
     pushMatrix();
@@ -78,13 +75,11 @@ void drawVignette()
     popMatrix();
 }
 
-// Render the bubbles in the background
 void drawBubbles()
 {   
     
     if(initialPause || gameOver) return;
     
-    // "Attempt" to make them look like bubbles by manipulating the light on them
     pushMatrix();
     ambientLight(255, 255, 255);
     lightSpecular(255, 255, 255);
@@ -123,14 +118,12 @@ void drawBubbles()
     popMatrix();
 }
 
-// Just the background color
 void drawBackground()
 {   
     background(backgroundColor);
     gradualChangeTo(targetBgColors[targetColorIndex]);
 }
     
-// Draw the map foreground, only the non-moving blocks
 void drawForeground()
 {
     pushMatrix();
@@ -173,8 +166,6 @@ void drawForeground()
                         if((y * mapWidth + x) == blocksToRemove.get(j)) 
                         {
                             color curTileColor = tileColors[y * mapWidth + x];
-                            
-                            // A formula with random numbers to create the effect when clearing rows
                             curTileColor += (cos(curTileColor) * 3.14 * (2.71 - curTileColor) + (curTileColor * 4.66)) * 0.0001; 
 
                             boxShape.setFill(curTileColor);
@@ -185,8 +176,6 @@ void drawForeground()
                     
                 }
                 
-                // Textures can be applied here
-                //boxShape.setTexture(textures[map[y * mapWidth + x] - 1]);
                 shape(boxShape);
                 pop();
             }
@@ -201,11 +190,9 @@ void drawForeground()
     popMatrix();
 }
 
-// This controls the gradual change to another color for the background
-// The background will slowly shift to a specific target color while the game plays
 void gradualChangeTo(color targetColor)
 {
-    int changeSpeed = 10; // Higher is slower
+    int changeSpeed = 10;
     int dr = 0;
     int dg = 0;
     int db = 0;
@@ -269,7 +256,7 @@ void drawGameOverScreen()
     text("GAME OVER!", 0, -10, 51);
     fill(255, 255, 255);
     textSize(15);
-    text("Press space to continue", -2, 30, 51);
+    text("Aperte Espaco para continuar", -2, 30, 51);
     pop();
     popMatrix();
 }
@@ -283,7 +270,7 @@ void drawInterface()
     shape(scoreTextBgShape);
     
     push();
-    text("Score", 20, -5, 51);
+    text("Pontos", 20, -5, 51);
     textAlign(RIGHT);
     textSize(20);
     text("" + score, 80, 28, 51);
@@ -298,7 +285,7 @@ void drawInterface()
     shape(timerTextBgShape);
     
     push();
-    text("Time", -20, -5, 51);
+    text("Tempo", -20, -5, 51);
     textSize(20);
     textAlign(LEFT);
     text("" + secondsSinceStart, -80, 28, 51);
